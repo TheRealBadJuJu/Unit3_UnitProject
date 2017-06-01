@@ -1,66 +1,72 @@
-class Cars
+class Cars1
 {
-    int c = 0;
-  Cars()
+  int c = 0;
+  PVector velocity;
+  Cars1()
   {
 
-    pos = new PVector(width/2, height/2);
-    Forward = new PVector(speed, 0);
+    pos = new PVector(width/4, height/2);
+    Forward1 = new PVector(speed, 0);
+    velocity = new PVector(0, 0);
   }
-  void draw1()
+  void draw()
   {
+    if (reset == true)
+    {
+      pos.x = width/4;
+      pos.y = height/2;
+      r = 0;
+    }
     strokeWeight(2);
     pushMatrix();
-    fill(c);
+    fill(0, 0, 255);
     stroke(255);
     translate(pos.x, pos.y);
     rotate(r);
-    if (forward == true)
+    if (forward1 == true)
     {
-      PVector dir =  Forward.copy();
+      PVector dir =  Forward1.copy();
       dir.rotate(r);
       dir.normalize();
       dir.mult(speed);
       pos.add(dir);
     }
-    if (backward == true)
+    if (backward1 == true)
     {
-      PVector dir =  Forward.copy();
+      PVector dir =  Forward1.copy();
       dir.rotate(r);
       dir.normalize();
       dir.mult(speed);
       pos.sub(dir);
     }
-    if (left == true && ableToTurn == true)
+    if (left1 == true && ableToTurn1 == true)
     {
-      r-= PI/60;
+      r-= PI/30;
     }
-    if (right == true && ableToTurn == true)
+    if (right1 == true && ableToTurn1 == true)
     {
-      r+= PI/60;
-    }
-    if (boostAvailable == true && boosting == true);
-    {
-      boost-=0.1;
-      speed = 20;
-    }
-    if (boosting==false)
-    {
-      speed = 10;
+      r+= PI/30;
     }
     rect(0, 0, sizeY, sizeX);
     popMatrix();
-    if(collideCircleWithRotatedRectangle(ball,pos) == true)
+    checkBoundary();
+    if (checkCollision() == true)
     {
-      c = 47;
+      PVector tempPlayer = pos.copy();
+      tempPlayer.sub(pos2);
+      tempPlayer.setMag(2*speed);
+      velocity = tempPlayer;
     } else
     {
-      c = 0;
+      velocity.x = 0;
+      velocity.y = 0;
     }
+    pos.add(velocity);
   }
 
 
-  boolean collideCircleWithRotatedRectangle (PVector circle,PVector rect ) {
+  boolean collideCircleWithRotatedRectangle1 (PVector circle, PVector rect ) 
+  {
 
     float rectCenterX = rect.x;
     float rectCenterY = rect.y;
@@ -117,10 +123,41 @@ class Cars
     return collision;
   }
 
-  double getDistance(double fromX,double fromY,double toX,double toY )
+  double getDistance(double fromX, double fromY, double toX, double toY )
   {
     double dX = Math.abs( fromX - toX );
     double dY = Math.abs( fromY - toY );
     return Math.sqrt( ( dX * dX ) + ( dY * dY ) );
+  }
+
+  void checkBoundary()
+  {
+    if (pos.x>width-sizeY/2)
+    {
+      pos.x-=speed;
+    }
+    if (pos.x<sizeY/2)
+    {
+      pos.x+=speed;
+    }
+    if (pos.y>height-sizeY/2)
+    {
+      pos.y-=speed;
+    }
+    if (pos.y<sizeY/2)
+    {
+      pos.y+=speed;
+    }
+  }
+
+  boolean checkCollision()
+  {
+    if (dist(pos.x, pos.y, pos2.x, pos2.y)<sizeY)
+    {
+      return true;
+    } else
+    {
+      return false;
+    }
   }
 }

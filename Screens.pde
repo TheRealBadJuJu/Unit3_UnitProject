@@ -1,6 +1,0 @@
-class Screen
-{
-  Screen()
-  {
-  }
-}
